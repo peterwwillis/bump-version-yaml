@@ -1,0 +1,24 @@
+advisorUi: 
+  image:
+    dockerTag: !SemanticVersion
+      bump: major
+
+advisorsApi: 
+  image:
+    dockerTag: !SemanticVersion
+      bump: minor
+
+adminApi: 
+  image:
+    dockerTag: !SemanticVersion
+      bump: patch
+
+ordersService: 
+  image:
+    dockerTag: !SemanticVersion
+      bump: none
+
+permissionsService: 
+  image:
+    dockerTag: !SemanticVersion
+      bump: none

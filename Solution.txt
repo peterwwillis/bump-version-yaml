@@ -1,0 +1,44 @@
+The first thing I looked at in terms of bumping versions were already-available
+solutions. Luckily there are many tools out there that can bump semantic
+versions in a variety of ways, so normally I would just wrap one of those into
+whatever project I was working on.
+
+However, your requirement says "*any* embedded version number in a *variety*
+of ways", so I know it has to be modular. Cool!
+
+So the first thing I think about is how to parse the file for versions. Trying
+to auto-detect arbitrary version numbers is going to be an exercise in
+futility, because literally the number "1" could be a version. So I have to
+be able to refer to specific parts of a YAML file in a general way.
+
+If this were XML, I'd use something like XPath. Turns out there is a
+specification for YPath[1], but there doesn't seem to be a Python
+implementation, and I'm not taking that on for a tiny project.
+
+There is a tool that could sort of handle this, called yq[2], which is an
+extension of the jq tool, a JSON swiss army knife. However, the addition of
+versioning logic makes these changes non-trivial, so we'll just settle with
+custom Python code and YAML parsing.
+
+If we could control the specification of these YAML files, we could use
+advanced features such as custom tags and generators to automatically bump
+anything tagged as a version. But we don't control these files necessarily, so
+it's back to implementing a crappy XPath...
+
+ruamel.yaml is the most modern YAML parser for Python, so we'll start with
+that.
+
+To identify where in a YAML file a version is, a secondary YAML file will have
+a path to what should be a version.
+
+To determine the version schema and what to do with it, we can use YAML tags
+at the end of the path to construct objects. Basically, construct a map of
+where keys with versions should be, convert those into objects, parse the
+target document for the key paths, use the object to transform the version,
+and then write the file back out.
+
+
+
+
+[1]: https://raw.githubusercontent.com/peterkmurphy/YPath-Specification/master/ypathdoc.txt
+[2]: https://github.com/mikefarah/yq
