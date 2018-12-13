@@ -21,4 +21,7 @@ ordersService:
 permissionsService: 
   image:
     dockerTag: !SemanticVersion
-      bump: none
+      bump:
+          - major
+          - minor
+          - patch

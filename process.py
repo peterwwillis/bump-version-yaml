@@ -4,11 +4,25 @@ if sys.version_info < (3, 5):
     raise Exception("Error: must use python 3.5 or greater")
 
 from ruamel.yaml import YAML
+from versio.version import Version
+
 import argparse
 
 YAML_FILE = "example.yaml"
 MAP_FILE = "map.yaml"
 
+# Look in versio/version_scheme.py to see how to extend this with new
+# version schemas, as well as what the supported bump fields are for
+# existing schemas.
+# 
+# In the default schema (PEP440), a version is made up of "fields", the
+# default of which is the "release" field, like "1.2.3" in "1.2.3rc1".
+# Then there are "subfields" of the field, which would be "major" ("1"),
+# "minor" ("2"), and "tiny" ("3").
+# 
+# Trying to bump a version from "1.2.3rc" to "1.2.3" will require an extra
+# promote=True option to bump, and we'll probably need to support an extra
+# mapping arg for this. #TODO
 class SemanticVersion(object):
     def __init__(self, bump):
         print("Found a semantic version!")
@@ -17,10 +31,21 @@ class SemanticVersion(object):
     def do(self, ver):
         print("object '%s', version '%s'" % (self, ver))
         print("bump: %s" % self.bump)
+        #>>> Pep440VersionScheme.fields
+        #['release', 'pre', 'post', 'dev', 'local']
+        #>>> Pep440VersionScheme.format_str
+        #'{0}{1}{2}{3}{4}'
+        #>>> Pep440VersionScheme.subfields
+        #{'tiny2': ['Release', 3], 'major': ['Release', 0], 'tiny': ['Release', 2], 'minor': ['Release', 1]}
+
+        ver = Version(ver)
+        print("version: %s" % ver)
+
         return ver
 
 class BumpVers(object):
     y = {}
+    logging = True
 
     def load_f(self, name, path):
         #yaml = YAML(typ='unsafe')
@@ -30,32 +55,33 @@ class BumpVers(object):
 
     def s(self, i):
         return " " * (i*4)
+    def log(self, string, i=0):
+        if self.logging == False: return
+        print( (" " * (i*4)) + string )
 
     def walk_data(self, m, d, i=0):
         print("\n")
-        print( self.s(i) + "d: '%s', type: '%s'" % (d, type(d)) )
-        print( self.s(i) + "m: '%s', type: '%s'" % (m, type(m)) )
+        self.log("d: '%s', type: '%s'" % (d, type(d)), i)
+        self.log("m: '%s', type: '%s'" % (m, type(m)), i)
 
         if isinstance(d, dict):
             for key in d.keys():
-                print( "%sd key '%s'" % (self.s(i), key) )
+                self.log("%sd key '%s'" % (self.s(i), key), i)
                 for mkey in m.keys():
                     if key == mkey:
-                        print( self.s(i) + "Found key '%s' matching map key" % key)
+                        self.log("Found key '%s' matching map key" % key, i)
                         self.walk_data( m[mkey], d[key], i+1 )
         elif isinstance(d, list) or isinstance(d, tuple):
-            raise Exception("TODO: fix me")
+            raise Exception("TODO: please finish this code path")
             for item in d:
-                print("i %i" % i)
-                print( "%sd item '%s'" % (self.s(i), key) )
+                self.log("%sd item '%s'" % (self.s(i), key), i)
                 #for mitem in m:
                 self.walk_data( m, item, i+1 )
         else:
-            print( self.s(i) + "d entry: '%s', type: '%s'" % (d, type(d)) )
+            self.log("d entry: '%s', type: '%s'" % (d, type(d)), i)
             if isinstance(m, SemanticVersion):
-                print( self.s(i) + "found SemanticVersion")
+                self.log("found SemanticVersion", i)
                 d = m.do(d)
-
 
     def bump_vers(self):
         self.walk_data( self.y["map"], self.y["data"] )
