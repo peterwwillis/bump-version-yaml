@@ -137,6 +137,11 @@ def main():
         v.load_f('data', a.datafile[0])
         v.load_f('map', a.mapfile[0])
         v.bump_vers()
+        # Overwrite data file with bumped copy
+        fname = a.datafile[0].name
+        a.datafile[0].close()
+        with open(fname, 'w') as f:
+            YAML().dump(v.data["data"], f)
 
 if __name__ == "__main__":
     main()
