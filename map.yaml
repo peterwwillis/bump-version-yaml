@@ -1,26 +1,26 @@
 advisorUi: 
   image:
-    dockerTag: !SemanticVersion
+    dockerTag: !ForceSemanticVer
       bump: major
 
 advisorsApi: 
   image:
-    dockerTag: !SemanticVersion
+    dockerTag: !ForceSemanticVer
       bump: minor
 
 adminApi: 
   image:
-    dockerTag: !SemanticVersion
-      bump: patch
+    dockerTag: !ForceSemanticVer
+      bump: tiny
 
 ordersService: 
   image:
-    dockerTag: !SemanticVersion
+    dockerTag: !ForceSemanticVer
       bump: none
 
 permissionsService: 
   image:
-    dockerTag: !SemanticVersion
+    dockerTag: !ForceSemanticVer
       bump:
           - major
           - minor
