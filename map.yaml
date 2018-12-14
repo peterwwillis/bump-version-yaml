@@ -24,4 +24,4 @@ permissionsService:
       bump:
           - major
           - minor
-          - patch
+          - tiny

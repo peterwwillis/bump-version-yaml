@@ -37,7 +37,8 @@ where keys with versions should be, convert those into objects, parse the
 target document for the key paths, use the object to transform the version,
 and then write the file back out.
 
-
+Run 'make test' to test it, or run 'make' to build the virtualenv needed, and
+then run './process.sh --help' for usage. The example map file is 'map.yaml'.
 
 
 [1]: https://raw.githubusercontent.com/peterkmurphy/YPath-Specification/master/ypathdoc.txt
