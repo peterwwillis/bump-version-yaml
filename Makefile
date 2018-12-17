@@ -9,6 +9,6 @@ process.venv:
 clean:
 	rm -rf process.venv *.pyc
 
-test:
+test: process.venv
 	. process.venv/bin/activate && \
 	./func_test.py
