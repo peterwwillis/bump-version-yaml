@@ -1,14 +1,14 @@
 
-all: process.venv
+all: bump-version-yaml.venv
 
-process.venv:
-	virtualenv -p python3 process.venv && \
-	. process.venv/bin/activate && \
-	./process.venv/bin/pip install -r requirements.txt
+bump-version-yaml.venv:
+	virtualenv -p python3 bump-version-yaml.venv && \
+	. bump-version-yaml.venv/bin/activate && \
+	./bump-version-yaml.venv/bin/pip install -r requirements.txt
 
 clean:
-	rm -rf process.venv *.pyc
+	rm -rf bump-version-yaml.venv *.pyc
 
-test: process.venv
-	. process.venv/bin/activate && \
+test: bump-version-yaml.venv
+	. bump-version-yaml.venv/bin/activate && \
 	./func_test.py

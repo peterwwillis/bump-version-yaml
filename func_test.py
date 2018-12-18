@@ -9,7 +9,7 @@ from shutil import copyfile
 import os
 
 class TestCmdLine(unittest.TestCase):
-    exe = "./process.py"
+    exe = "./bump-version-yaml.py"
     def test_tool(self):
         copyfile("example.yaml", "example.yaml.tmp")
         cp = run( [ self.exe, "example.yaml.tmp", "map.yaml" ] )
